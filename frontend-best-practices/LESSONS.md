@@ -170,6 +170,11 @@ Entries marked `(seed)` were written on the seeding date from the originating pr
 - Cause: both elements were anchored with logical properties (`inset-inline-start: 0`, `margin-inline-start`), which resolve to the RIGHT edge under `dir="rtl"`, while the script moved them by the pointer's physical `clientX`/`clientY`. The dot ended up one viewport width to the right of the pointer.
 - Rule: RTL. Logical properties are for layout that follows the reading direction. Anything positioned from pointer coordinates or `getBoundingClientRect()` offsets is physical: anchor it with `top`/`left`, comment why, and test in both directions that the element's centre lands within a couple of pixels of the pointer. Never hide the native cursor without a test that the replacement is on screen.
 
+### 2026-10-04 · The first hosted build failed where the local end-to-end passed (deploy)
+- Symptom: a new self-hosted build worker passed every test and a real local end-to-end build, then failed its first hosted build at the content-loading step.
+- Cause: the hosted CMS writes media URLs on its public origin, while the worker loaded content from the internal service address; the loader (correctly) refuses media that is not on the origin it loads from. Locally both addresses were the same, so the test could not see it.
+- Rule: deploys. Treat the first run in the real environment as part of the test: make every pipeline fail safe (nothing is published after a failed step), watch that run live, and compare the URL shapes the real data uses with the ones your fixtures use. When a service starts bundling code from another package, add that package to the service's deploy triggers the same day.
+
 ## Retired or corrected rules
 
 None yet.
