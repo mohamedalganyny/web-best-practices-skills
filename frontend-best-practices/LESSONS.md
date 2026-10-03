@@ -165,6 +165,11 @@ Entries marked `(seed)` were written on the seeding date from the originating pr
 - Cause: only the suites of the packages the change touched were run; the preview app renders the same templates and broke without a single file of its own changing.
 - Rule: TST. On every merge run every suite in the repository, including apps that only consume the changed code; a parity test that whitelists known differences must learn each new intentional difference by its exact markers, with raw assertions that it still exists on one side and not the other.
 
+### 2026-10-03 · A custom cursor that vanished in right-to-left pages (bug)
+- Symptom: on the right-to-left version of a site, the custom cursor dot never appeared and the native cursor was hidden, so the visitor had no pointer at all; a hover preview card that follows the pointer was also off-screen.
+- Cause: both elements were anchored with logical properties (`inset-inline-start: 0`, `margin-inline-start`), which resolve to the RIGHT edge under `dir="rtl"`, while the script moved them by the pointer's physical `clientX`/`clientY`. The dot ended up one viewport width to the right of the pointer.
+- Rule: RTL. Logical properties are for layout that follows the reading direction. Anything positioned from pointer coordinates or `getBoundingClientRect()` offsets is physical: anchor it with `top`/`left`, comment why, and test in both directions that the element's centre lands within a couple of pixels of the pointer. Never hide the native cursor without a test that the replacement is on screen.
+
 ## Retired or corrected rules
 
 None yet.
