@@ -160,6 +160,11 @@ Entries marked `(seed)` were written on the seeding date from the originating pr
 - Cause: a new conditional block that renders nothing still sat between two blank-line-separated template expressions, and each whitespace run between expressions emits a space.
 - Rule: TST. When output must stay byte-identical for sites without a feature, keep the new conditional adjacent to a neighbouring expression (or inside it), and run the byte-identical test on the merged code before trusting an implementer's claim about whose change caused a diff.
 
+### 2026-10-03 · A suite nobody ran went red for a whole release (review)
+- Symptom: a separate preview app's parity tests failed after a feature merge and stayed red until the next merge happened to run them.
+- Cause: only the suites of the packages the change touched were run; the preview app renders the same templates and broke without a single file of its own changing.
+- Rule: TST. On every merge run every suite in the repository, including apps that only consume the changed code; a parity test that whitelists known differences must learn each new intentional difference by its exact markers, with raw assertions that it still exists on one side and not the other.
+
 ## Retired or corrected rules
 
 None yet.

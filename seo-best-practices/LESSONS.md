@@ -111,6 +111,11 @@ Entries marked `(seed)` were written on the seeding date from the originating pr
 - Cause: n/a.
 - Rule: TECH-7. Publish the key file at the root, deploy, confirm the key URL returns 200, then submit only the changed URLs in one POST; an HTTP 202 means accepted, pending key validation.
 
+### 2026-10-03 · An SEO title the template never read (build)
+- Symptom: editors could type an SEO title for ordinary pages, it was saved, and the browser tab and social title still showed the page name.
+- Cause: the page template built its title from the page name and never read the stored SEO title; nothing failed, so nobody noticed.
+- Rule: on-page titles. For every content type with SEO fields, test that a set SEO title and description reach `<title>`, `og:title` and the meta description, and that unset ones fall back unchanged.
+
 ## Retired or corrected rules
 
 None yet. (The non-ASCII slug entry above refines TECH-8; the rule text was updated in the same change.)
