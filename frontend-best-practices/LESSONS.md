@@ -150,6 +150,16 @@ Entries marked `(seed)` were written on the seeding date from the originating pr
 - Cause: deploy style, host side effects and CDN bot rules were not checked before acting.
 - Rule: PER-10, TST-10 and `references/caching-and-deploys.md`. List the root first, stage before attaching a live domain and read DNS records straight after, verify crawler access with `curl` and a crawler user agent, and drive live forms with requests.
 
+### 2026-10-03 · A consent banner that stole focus (review)
+- Symptom: on a first visit the banner script moved keyboard focus to "Accept all" on page load, while the banner itself was the last element in the body.
+- Cause: focus was used to make up for a DOM position that keyboard users would otherwise reach last.
+- Rule: A11Y. A non-modal banner never takes focus on load. Put it first in the body so Tab reaches it first; give Accept and Reject equal visual weight; start every optional toggle off; test that `document.activeElement` is the body after load and that the first Tab lands on the banner.
+
+### 2026-10-03 · One extra space broke a byte-identical baseline (review)
+- Symptom: a page for a site with the new feature turned off differed from its baseline by a single space.
+- Cause: a new conditional block that renders nothing still sat between two blank-line-separated template expressions, and each whitespace run between expressions emits a space.
+- Rule: TST. When output must stay byte-identical for sites without a feature, keep the new conditional adjacent to a neighbouring expression (or inside it), and run the byte-identical test on the merged code before trusting an implementer's claim about whose change caused a diff.
+
 ## Retired or corrected rules
 
 None yet.

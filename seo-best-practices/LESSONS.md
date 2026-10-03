@@ -96,6 +96,21 @@ Entries marked `(seed)` were written on the seeding date from the originating pr
 - Cause: pages without unique value fall under scaled content abuse; location variants that funnel to one page are doorways.
 - Rule: CONT-3, LOC-3. Generate only pages that carry unique data or experience (real locations, real services), draft them for human review and never auto-publish.
 
+### 2026-10-03 · Breadcrumbs built from URL segments (build)
+- Symptom: generated BreadcrumbList data linked to a parent path that the site never builds (a profile page under `/team/` with no `/team` index) and used raw slugs or hard-coded labels that did not match the site's own navigation in the second language.
+- Cause: the crumb trail was derived from the URL string, not from the routes the build emits or the site's own page titles.
+- Rule: SCHEMA. Build breadcrumbs from the list of routes the build actually produces; label each crumb with the title of that page in the current locale, skip any parent without a page, and assert in a test that every crumb URL resolves to a built file.
+
+### 2026-10-03 · SEO fields the CMS silently dropped (build)
+- Symptom: new meta titles and descriptions were written by the seed for one content type, the tests passed, and the live pages still showed the old text.
+- Cause: that content type was never registered with the CMS's SEO-fields plugin, so the field did not exist and the write was discarded without an error; the tests fed fixture data straight to the renderer.
+- Rule: TECH and on-page checks. After seeding or editing metadata, check the loaded content or a built page, not the seed; when a template reads `meta` on a content type, assert the CMS defines that field.
+
+### 2026-10-03 · A launch-day IndexNow ping (build)
+- Symptom: none (it worked); recording the shape that did.
+- Cause: n/a.
+- Rule: TECH-7. Publish the key file at the root, deploy, confirm the key URL returns 200, then submit only the changed URLs in one POST; an HTTP 202 means accepted, pending key validation.
+
 ## Retired or corrected rules
 
 None yet. (The non-ASCII slug entry above refines TECH-8; the rule text was updated in the same change.)
