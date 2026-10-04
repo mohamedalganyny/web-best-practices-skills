@@ -175,6 +175,11 @@ Entries marked `(seed)` were written on the seeding date from the originating pr
 - Cause: the hosted CMS writes media URLs on its public origin, while the worker loaded content from the internal service address; the loader (correctly) refuses media that is not on the origin it loads from. Locally both addresses were the same, so the test could not see it.
 - Rule: deploys. Treat the first run in the real environment as part of the test: make every pipeline fail safe (nothing is published after a failed step), watch that run live, and compare the URL shapes the real data uses with the ones your fixtures use. When a service starts bundling code from another package, add that package to the service's deploy triggers the same day.
 
+### 2026-10-04 · Two deploy traps (deploy)
+- Symptom: (1) a service added to a deploy script's build list was not rebuilt by the deploy that shipped the change; (2) a production front-end built by hand would have pointed every live form at a development endpoint.
+- Cause: (1) the deploy script updates its own checkout mid-run but keeps executing the content it started with; (2) the local environment file held development values, and nothing compared the build with what was live.
+- Rule: deploys. A self-updating deploy script applies its own changes one run late — deploy twice after changing it and inspect the affected container. When you must build production by hand, take every public setting from the live pages and prove the new build matches the live output (with build-path-dependent ids and asset hashes masked) before uploading.
+
 ## Retired or corrected rules
 
 None yet.
