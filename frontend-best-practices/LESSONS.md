@@ -185,6 +185,16 @@ Entries marked `(seed)` were written on the seeding date from the originating pr
 - Cause: headers, DKIM/SPF alignment, link targets and the one-click unsubscribe only exist once a real message crosses a real mail server.
 - Rule: TST. After shipping any email feature, subscribe or submit with a dedicated test mailbox on the sending domain, read it over IMAP, and assert: From is the site's own domain (never the visitor's address), Reply-To is right, `Auto-Submitted` is set, `List-Unsubscribe` + `List-Unsubscribe-Post` are present for anything list-like, the receiver's Authentication-Results show DKIM and SPF pass for the From domain, the confirm link works, and the one-click POST actually unsubscribes. Never print the mailbox password or the tokens in logs.
 
+### 2026-10-05 · A deploy check that polls the origin does not prove what visitors get (deploy)
+- Symptom: a publish passed every check (build id matched, smoke test green) while a real browser still received the previous HTML.
+- Cause: the check read the build id with a cache-busting request, which goes straight to the origin; the CDN in front of the site kept serving its cached copy until it expired.
+- Rule: DEP. After confirming the origin has the new build, purge the CDN (server cache and edge cache) as the deploy's last step, after the origin check, so the edge never re-caches the old page; make the purge non-fatal. Verify "live" with a plain request exactly like a visitor's, never with a cache-buster.
+
+### 2026-10-05 · Free LLM endpoints change under you: filter, fall back, and switch reasoning off (AI features)
+- Symptom: a default model was withdrawn the day it was chosen; another was rate-limited upstream all day; one model printed its chain of thought into the answer; one returned empty answers.
+- Cause: free model lists change without notice, and reasoning models treat "exclude reasoning" differently (some leak it as plain prose, some return nothing).
+- Rule: AI. Keep an ordered fallback list editable by the site owner; before each call drop models the provider's public model list no longer offers (cached, and keep the configured list if the catalogue cannot be read); explicitly disable reasoning for chat answers; strip scripts the site never uses from streamed output; choose defaults by running the real prompt and the real site content against a bilingual question set, never from a benchmark.
+
 ## Retired or corrected rules
 
 None yet.
