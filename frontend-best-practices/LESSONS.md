@@ -180,6 +180,11 @@ Entries marked `(seed)` were written on the seeding date from the originating pr
 - Cause: (1) the deploy script updates its own checkout mid-run but keeps executing the content it started with; (2) the local environment file held development values, and nothing compared the build with what was live.
 - Rule: deploys. A self-updating deploy script applies its own changes one run late — deploy twice after changing it and inspect the affected container. When you must build production by hand, take every public setting from the live pages and prove the new build matches the live output (with build-path-dependent ids and asset hashes masked) before uploading.
 
+### 2026-10-05 · Prove a mail feature end to end with a mailbox you can read (testing)
+- Symptom: a sign-up with double opt-in and notification emails passed every unit test, but unit tests cannot show what a real receiving server sees.
+- Cause: headers, DKIM/SPF alignment, link targets and the one-click unsubscribe only exist once a real message crosses a real mail server.
+- Rule: TST. After shipping any email feature, subscribe or submit with a dedicated test mailbox on the sending domain, read it over IMAP, and assert: From is the site's own domain (never the visitor's address), Reply-To is right, `Auto-Submitted` is set, `List-Unsubscribe` + `List-Unsubscribe-Post` are present for anything list-like, the receiver's Authentication-Results show DKIM and SPF pass for the From domain, the confirm link works, and the one-click POST actually unsubscribes. Never print the mailbox password or the tokens in logs.
+
 ## Retired or corrected rules
 
 None yet.
