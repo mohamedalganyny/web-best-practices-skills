@@ -195,6 +195,11 @@ Entries marked `(seed)` were written on the seeding date from the originating pr
 - Cause: free model lists change without notice, and reasoning models treat "exclude reasoning" differently (some leak it as plain prose, some return nothing).
 - Rule: AI. Keep an ordered fallback list editable by the site owner; before each call drop models the provider's public model list no longer offers (cached, and keep the configured list if the catalogue cannot be read); explicitly disable reasoning for chat answers; strip scripts the site never uses from streamed output; choose defaults by running the real prompt and the real site content against a bilingual question set, never from a benchmark.
 
+### 2026-10-06 · A custom cursor disappears over modal dialogs (cursor, dialogs)
+- Symptom: on a site that hides the native pointer and draws its own cursor element, opening a chat or a sign-up pop-up left the visitor with no pointer at all over the dialog.
+- Cause: a modal `<dialog>` (showModal) renders in the browser's top layer, above any z-index, so the drawn cursor sits underneath it; the dialog also inherits the page's `cursor: none`.
+- Rule: CUR. Whenever a page hides the native pointer, add a rule for open modals: `html:has(dialog:modal)` hides the drawn cursor, and the dialog, its backdrop and its controls get real cursors back (`auto`, `pointer` on links, buttons, labels and checkboxes, `text` in fields). Test it in a browser: open the modal, read the computed cursor under the pointer and the drawn cursor's visibility.
+
 ## Retired or corrected rules
 
 None yet.
